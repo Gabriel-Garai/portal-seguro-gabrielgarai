@@ -1,1 +1,1 @@
-https://SEU-PROJETO.pages.dev/oauth/callback/google
+https://portal-seguro-gabrielgarai.pages.dev/oauth/callback/google
