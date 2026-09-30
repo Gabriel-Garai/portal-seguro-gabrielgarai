@@ -2,7 +2,7 @@
 
 ## Caso 1: retorno sem cookie temporário
 - Preparação: iniciei o login em janela comum, parei na página do provedor e copiei a URL de autorização para uma janela privativa (sem `__Host-oauth-tx`).
-- Pedido enviado: concluí o login na janela privativa; o provedor redirecionou para `/oauth/callback/{provider}`.
+- Pedido enviado: concluí o login na janela privativa; o provedor redirecionou para https://portal-seguro-gabrielgarai.pages.dev/oauth/callback/{provider}`.
 - Resultado esperado: 400 "Falha na autenticação." e nenhuma sessão criada.
 - Resultado observado: PREENCHER
 
@@ -26,7 +26,7 @@
 
 ## Caso 5: origem inválida na saída
 - Preparação: sessão válida aberta em URL_BASE; abri https://example.com.
-- Pedido enviado: `fetch("URL_BASE/oauth/logout",{method:"POST",credentials:"include"})` no console.
+- Pedido enviado: `fetch("https://portal-seguro-gabrielgarai.pages.dev/oauth/logout",{method:"POST",credentials:"include"})` no console.
 - Resultado esperado: 403; sessão original continua válida.
 - Resultado observado: PREENCHER
 
