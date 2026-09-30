@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal Seguro | Login</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Portal Seguro</h1>
+    <p id="status">A sessão ainda não foi consultada.</p>
+    <div id="login" class="actions">
+      <a class="btn google" href="/oauth/login/google">Entrar com Google</a>
+      <a class="btn github" href="/oauth/login/github">Entrar com GitHub</a>
+    </div>
+    <form id="logout" method="post" action="/oauth/logout" hidden>
+      <button class="btn out" type="submit">Sair</button>
+    </form>
+    <p class="note">Esta página é estática e pública. A sessão protege apenas as rotas <code>/api/*</code>.</p>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
