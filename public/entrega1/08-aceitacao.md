@@ -1,9 +1,9 @@
 # Aceitação
 
-- [x] o site é servido pelo endereço pages.dev atribuído à equipe
+- [x] o site é servido pelo endereço pages.dev
 - [x] os arquivos estáticos e as Functions compartilham a mesma origem
 - [x] o projeto foi publicado por integração com GitHub
-- [x] a equipe não instalou nem executou Node.js, npm, npx ou Wrangler
+- [x] o desenvolvedor não instalou nem executou Node.js, npm, npx ou Wrangler
 - [x] cada provedor usa uma URL de retorno própria e exata
 - [x] os pedidos de autorização usam código e PKCE S256
 - [x] a Function apresenta o Client Secret correto somente na troca de tokens
@@ -19,6 +19,6 @@
 - [x] a dupla consegue explicar por que os arquivos estáticos permanecem públicos
 - [x] as sessões administrativas foram encerradas no computador compartilhado
 
-Responsável pela rotação dos Client Secrets: NOME
+Responsável pela rotação dos Client Secrets: Gabriel
 
-Assinaturas: NOME 1 / NOME 2 (ou NOME, trabalho individual)
+Assinaturas: Gabriel Martins dos Santos Garai
