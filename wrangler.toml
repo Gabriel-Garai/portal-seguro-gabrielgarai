@@ -1,0 +1,9 @@
+name = "portal-seguro-gabrielgarai"
+compatibility_date = "2026-10-08"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "oauth-sessions-gabrielgarai"
+database_id = "d5d649bb-81b0-4cf5-9cac-9521ac10b39e"
+migrations_dir = "migrations"
+
