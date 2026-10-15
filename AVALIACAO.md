@@ -1,6 +1,6 @@
 # Avaliação — GitHub Actions com IA
 
-Dupla: Gabriel Martins dos Santos Garai e Rennan.
+Dupla: Gabriel Martins dos Santos Garai e Rennan Raposo da Silva.
 Repositório de Gabriel: https://github.com/Gabriel-Garai/portal-seguro-gabrielgarai
 
 ## Tarefa 1 — CI
