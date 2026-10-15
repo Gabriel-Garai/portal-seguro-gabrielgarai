@@ -6,7 +6,8 @@ on:
 
 permissions:
   contents: read
-
+  pull-requests: write
+  
 jobs:
   revisar:
     runs-on: ubuntu-latest
