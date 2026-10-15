@@ -81,7 +81,13 @@ A consulta foi executada no banco remoto e retornou success: true.
 
 ### Teste sem alteração em migrations/
 
-A comprovação será registrada após o merge do PR deste arquivo, que altera apenas a documentação.
+O PR nº 5 alterou somente AVALIACAO.md e foi incorporado à main:
+https://github.com/Gabriel-Garai/portal-seguro-gabrielgarai/pull/5
+
+No commit de merge f5127a2b23e5c17b747a06f859d370d8a23bd818, somente o workflow ci executou, com sucesso:
+https://github.com/Gabriel-Garai/portal-seguro-gabrielgarai/actions/runs/38823682012
+
+Não houve execução de migrar para esse commit, confirmando o filtro paths: ['migrations/**'].
 
 ## Perguntas
 
