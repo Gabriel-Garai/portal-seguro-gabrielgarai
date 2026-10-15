@@ -2,6 +2,7 @@
 
 Dupla: Gabriel Martins dos Santos Garai e Rennan Raposo da Silva.
 Repositório de Gabriel: https://github.com/Gabriel-Garai/portal-seguro-gabrielgarai
+Repositório de Rennan: https://github.com/rennanraposo/oauth-lab-rennan
 
 ## Tarefa 1 — CI
 
