@@ -1,28 +1,388 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Portal Seguro | Login</title>
-  <link rel="stylesheet" href="/styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portal Seguro | Tempo e horários</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080f20;color:#edf3ff;font:16px system-ui,sans-serif}
+main{max-width:1100px;margin:auto;padding:36px 20px}
+a{color:#8ddcff}
+header{display:flex;justify-content:space-between;gap:24px;align-items:center;flex-wrap:wrap}
+h1{margin:8px 0;font-size:clamp(28px,5vw,44px)}
+p{line-height:1.5}
+.muted,small{color:#b8c7df}
+.session{background:#132039;padding:18px;border-radius:18px;max-width:420px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn,button{background:#93e4dd;color:#09252c;border:0;border-radius:10px;padding:12px 16px;cursor:pointer;text-decoration:none;font:inherit;font-weight:650}
+.session .btn{font-size:14px;padding:9px 12px}
+button:disabled{opacity:.55;cursor:wait}
+[hidden]{display:none!important}
+.search{margin:30px 0 20px;padding:20px;background:#111c31;border:1px solid #2a3950;border-radius:18px}
+label{display:block;margin-bottom:10px;font-weight:650}
+.search-row{display:flex;gap:10px}
+input{min-width:0;flex:1;border:1px solid #455674;background:#080f20;color:white;border-radius:10px;padding:12px;font:inherit}
+input:focus,button:focus-visible,a:focus-visible{outline:3px solid #80ded5;outline-offset:3px}
+#results{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+#results button{background:#263855;color:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.weather{position:relative;overflow:hidden;isolation:isolate;min-height:440px;border:1px solid #ffffff26;border-radius:26px;padding:28px;background:linear-gradient(145deg,#206b91,#14364d);box-shadow:0 20px 60px #0003}
+.weather.night{background:linear-gradient(145deg,#263459,#101b32)}
+.weather.rain,.weather.thunder{background:linear-gradient(145deg,#3a536c,#1c293c)}
+.weather.snow{background:linear-gradient(145deg,#436881,#25384f)}
+.weather.mist{background:linear-gradient(145deg,#586a79,#293c50)}
+.weather>*:not(.scene){position:relative;z-index:1}
+.country{letter-spacing:2px;font-size:12px;text-transform:uppercase;color:#d9f2ff}
+h2{font-size:28px;margin:8px 0}
+.clock{font-variant-numeric:tabular-nums;font-size:32px;margin-top:14px}
+.date{font-size:14px;color:#e0eafa}
+.temp{font-size:70px;font-weight:700;letter-spacing:-4px;margin-top:22px}
+.description{text-transform:capitalize;margin:0 0 22px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metrics span{display:block;font-size:12px;color:#d4e3f1}
+.metrics strong{display:block;margin-top:5px;font-size:16px}
+.updated{display:block;font-size:11px;margin-top:24px;color:#d4e3f1}
+.error{color:#ffe1ab;font-size:14px;min-height:22px}
+.scene{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.65}
+.orb{position:absolute;right:32px;top:60px;width:85px;height:85px;border-radius:50%;background:#ffe398;box-shadow:0 0 60px #ffe39870;animation:pulse 5s ease-in-out infinite}
+.night .orb{background:#d9e8ff;box-shadow:0 0 40px #d9e8ff40}
+.night .orb:after{content:"";position:absolute;left:22px;top:-10px;width:78px;height:78px;border-radius:50%;background:#233153}
+.cloud{display:none;position:absolute;right:-15px;top:145px;width:180px;height:55px;border-radius:80px;background:#c6d9e5;animation:drift 9s ease-in-out infinite alternate}
+.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%;width:75px;height:75px;left:30px;bottom:10px}
+.cloud:after{width:100px;height:100px;left:70px;bottom:0}
+.clouds .cloud,.rain .cloud,.thunder .cloud,.snow .cloud,.mist .cloud{display:block}
+.rain .orb,.thunder .orb,.snow .orb,.mist .orb{display:none}
+.particles i{display:none;position:absolute;top:-20px;left:var(--x);animation:fall var(--speed) linear infinite;animation-delay:var(--delay)}
+.rain .particles i,.thunder .particles i{display:block;width:2px;height:18px;background:#bde7ff99}
+.snow .particles i{display:block;width:6px;height:6px;background:white;border-radius:50%}
+.thunder .scene{animation:flash 9s infinite}
+.mist .cloud{width:270px;opacity:.35}
+footer{margin-top:25px;font-size:13px;color:#b8c7df}
+@keyframes pulse{50%{transform:scale(1.08)}}
+@keyframes drift{to{transform:translateX(-45px)}}
+@keyframes fall{to{transform:translate(25px,520px)}}
+@keyframes flash{0%,93%,97%,100%{opacity:.65}94%,96%{opacity:1}}
+@media(max-width:700px){
+  .grid{grid-template-columns:1fr}
+  .search-row{flex-wrap:wrap}
+  .weather{padding:24px}
+  .session{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important}
+  .particles{display:none}
+}
+</style>
 </head>
 <body>
-  <main class="card">
-    <h1>Portal Seguro</h1>
-    <p id="status">A sessão ainda não foi consultada.</p>
-    
+<main>
+<header>
+  <div>
+    <span class="country">PORTAL SEGURO · OPENWEATHER</span>
+    <h1>Dois lugares. Agora.</h1>
+    <p class="muted">O tempo no Brasil e uma janela para Seul.</p>
+  </div>
+
+  <section class="session" aria-label="Sua sessão">
+    <p id="status">Consultando sua sessão…</p>
     <div id="login" class="actions">
       <a class="btn google" href="/oauth/login/google">Entrar com Google</a>
       <a class="btn github" href="/oauth/login/github">Entrar com GitHub</a>
     </div>
-
     <form id="logout" method="post" action="/oauth/logout" hidden>
       <button class="btn out" type="submit">Sair</button>
     </form>
+  </section>
+</header>
 
-    <p class="note">Esta página é estática e pública. A sessão protege apenas as rotas <code>/api/*</code>.</p>
-  </main>
-  
-  <script src="/app.js"></script>
+<form id="search" class="search">
+  <label for="city">Qual cidade brasileira você quer consultar?</label>
+  <div class="search-row">
+    <input id="city" placeholder="Ex.: Curitiba, Manaus, Recife"
+      required maxlength="100" autocomplete="off">
+    <button id="search-button" type="submit">Buscar cidade</button>
+  </div>
+  <p id="search-status" class="muted" role="status">
+    Pesquise e escolha a cidade pelo estado.
+  </p>
+  <div id="results"></div>
+</form>
+
+<div class="grid">
+  <article id="br" class="weather">
+    <div class="country">🇧🇷 Brasil · cidade selecionada</div>
+    <h2>Curitiba · Paraná</h2>
+    <div class="clock">--:--:--</div>
+    <div class="date"></div>
+    <div class="temp">--°</div>
+    <p class="description">Consultando o tempo…</p>
+    <div class="metrics">
+      <div><span>Sensação</span><strong data-field="feels">—</strong></div>
+      <div><span>Umidade</span><strong data-field="humidity">—</strong></div>
+      <div><span>Vento</span><strong data-field="wind">—</strong></div>
+    </div>
+    <small class="updated"></small>
+    <p class="error" role="status"></p>
+  </article>
+
+  <article id="kr" class="weather">
+    <div class="country">🇰🇷 Coreia do Sul · sempre por aqui</div>
+    <h2>Seul</h2>
+    <div class="clock">--:--:--</div>
+    <div class="date"></div>
+    <div class="temp">--°</div>
+    <p class="description">Consultando o tempo…</p>
+    <div class="metrics">
+      <div><span>Sensação</span><strong data-field="feels">—</strong></div>
+      <div><span>Umidade</span><strong data-field="humidity">—</strong></div>
+      <div><span>Vento</span><strong data-field="wind">—</strong></div>
+    </div>
+    <small class="updated"></small>
+    <p class="error" role="status"></p>
+  </article>
+</div>
+
+<footer>
+  Dados meteorológicos:
+  <a href="https://openweathermap.org/" target="_blank"
+    rel="noopener noreferrer">OpenWeather</a>.
+  Consultas automáticas a cada 10 minutos.
+  Relógios baseados na hora do dispositivo, ajustados ao fuso local.
+  A consulta do tempo é pública.
+</footer>
+</main>
+
+<script src="/app.js"></script>
+<script>
+const $ = (selector, root = document) => root.querySelector(selector);
+
+const places = {
+  br: {
+    lat: -25.4284, lon: -49.2733,
+    label: 'Curitiba · Paraná', offset: -10800, version: 0
+  },
+  kr: {
+    lat: 37.5665, lon: 126.978,
+    label: 'Seul', offset: 32400, version: 0
+  }
+};
+
+const number = value =>
+  new Intl.NumberFormat('pt-BR', {
+    maximumFractionDigits: 1
+  }).format(value);
+
+function localDate(timestamp, offset, options) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    ...options,
+    timeZone: 'UTC'
+  }).format(new Date(timestamp + offset * 1000));
+}
+
+function tick() {
+  for (const [id, place] of Object.entries(places)) {
+    if (place.offset === null) continue;
+    const card = document.getElementById(id);
+
+    $('.clock', card).textContent = localDate(
+      Date.now(), place.offset, {
+        hour: '2-digit', minute: '2-digit',
+        second: '2-digit', hourCycle: 'h23'
+      }
+    );
+
+    $('.date', card).textContent = localDate(
+      Date.now(), place.offset, {
+        weekday: 'long', day: '2-digit',
+        month: 'long', year: 'numeric'
+      }
+    );
+  }
+}
+
+for (const id of Object.keys(places)) {
+  const scene = document.createElement('div');
+  scene.className = 'scene';
+  scene.setAttribute('aria-hidden', 'true');
+  scene.innerHTML =
+    '<div class="orb"></div>' +
+    '<div class="cloud"></div>' +
+    '<div class="particles"></div>';
+
+  for (let n = 0; n < 24; n++) {
+    const particle = document.createElement('i');
+    particle.style.cssText =
+      `--x:${n * 4.3}%;` +
+      `--speed:${1.2 + (n % 5) * .4}s;` +
+      `--delay:-${n * .33}s`;
+    $('.particles', scene).append(particle);
+  }
+
+  document.getElementById(id).prepend(scene);
+}
+
+async function api(query) {
+  const response = await fetch(
+    '/api/clima?' + new URLSearchParams(query),
+    { signal: AbortSignal.timeout(15000) }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.erro || 'Falha na consulta.');
+  }
+
+  return data;
+}
+
+async function load(id) {
+  const place = places[id];
+  const card = document.getElementById(id);
+  const version = ++place.version;
+
+  $('.error', card).textContent = '';
+  $('.updated', card).textContent = 'Atualizando…';
+
+  try {
+    const data = await api({
+      lat: place.lat,
+      lon: place.lon
+    });
+
+    if (version !== place.version) return;
+
+    if (
+      !Number.isFinite(data.temperatura) ||
+      !Number.isFinite(data.fuso) ||
+      !Number.isFinite(data.atualizadoEm)
+    ) {
+      throw new Error('Resposta meteorológica inválida.');
+    }
+
+    place.offset = data.fuso;
+
+    $('h2', card).textContent = place.label;
+    $('.temp', card).textContent = number(data.temperatura) + '°';
+    $('.description', card).textContent = data.descricao;
+
+    $('[data-field="feels"]', card).textContent =
+      number(data.sensacao) + ' °C';
+
+    $('[data-field="humidity"]', card).textContent =
+      number(data.umidade) + '%';
+
+    $('[data-field="wind"]', card).textContent =
+      number(data.vento) + ' km/h';
+
+    const code = data.codigo;
+    const condition = code < 300 ? 'thunder'
+      : code < 600 ? 'rain'
+      : code < 700 ? 'snow'
+      : code < 800 ? 'mist'
+      : code === 800 ? 'clear'
+      : 'clouds';
+
+    card.className = 'weather ' + condition +
+      (data.icone.endsWith('n') ? ' night' : '');
+
+    $('.updated', card).textContent =
+      'Dados de ' +
+      localDate(data.atualizadoEm * 1000, place.offset, {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      }) +
+      ' · horário local';
+
+    tick();
+  } catch (error) {
+    if (version !== place.version) return;
+
+    $('.updated', card).textContent = 'Consulta não atualizada.';
+    $('.error', card).textContent =
+      error.name === 'TimeoutError'
+        ? 'A consulta demorou. Tentaremos novamente.'
+        : error.message;
+  }
+}
+
+$('#search').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const city = $('#city').value.trim();
+  if (!city) return;
+
+  const button = $('#search-button');
+  button.disabled = true;
+  $('#results').replaceChildren();
+  $('#search-status').textContent = 'Buscando cidades…';
+
+  try {
+    const data = await api({ cidade: city });
+
+    $('#search-status').textContent = data.locais.length
+      ? 'Selecione a cidade e confira o estado:'
+      : 'Nenhuma cidade encontrada. Tente outro nome.';
+
+    for (const location of data.locais) {
+      const option = document.createElement('button');
+      option.type = 'button';
+
+      const label = location.nome +
+        (location.estado ? ' · ' + location.estado : '');
+
+      option.textContent = label;
+
+      option.addEventListener('click', () => {
+        Object.assign(places.br, {
+          lat: location.lat,
+          lon: location.lon,
+          label
+        });
+
+        const card = $('#br');
+        $('h2', card).textContent = label;
+        $('.temp', card).textContent = '--°';
+        $('.description', card).textContent = 'Consultando o tempo…';
+
+        card.querySelectorAll('.metrics strong')
+          .forEach(el => el.textContent = '—');
+
+        $('.clock', card).textContent = '--:--:--';
+        $('.date', card).textContent = 'Consultando o fuso local…';
+        places.br.offset = null;
+        card.className = 'weather';
+
+        $('#results').replaceChildren();
+        $('#search-status').textContent =
+          'Cidade selecionada: ' + label;
+
+        load('br');
+      });
+
+      $('#results').append(option);
+    }
+  } catch (error) {
+    $('#search-status').textContent =
+      error.name === 'TimeoutError'
+        ? 'A busca demorou. Tente novamente.'
+        : error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+
+tick();
+setInterval(tick, 1000);
+
+load('br');
+load('kr');
+
+setInterval(() => {
+  load('br');
+  load('kr');
+}, 600000);
+</script>
 </body>
 </html>
